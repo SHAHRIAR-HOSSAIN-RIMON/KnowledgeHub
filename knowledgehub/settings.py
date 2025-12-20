@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "corsheaders",
+    # simplejwt blacklist (needed for logout token.blacklist())
+    "rest_framework_simplejwt.token_blacklist",
     #local apps
     "accounts",
     "workspaces",

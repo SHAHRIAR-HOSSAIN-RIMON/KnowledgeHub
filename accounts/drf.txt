@@ -1,0 +1,21 @@
+🌱 What does “generic” mean in Django REST Framework?
+In DRF, generic views are pre‑built view classes that already contain common logic you need for APIs.
+
+Think of them as ready‑made templates.
+
+Instead of writing the same code again and again, DRF gives you:
+
+CreateAPIView → for creating objects
+
+ListAPIView → for listing objects
+
+RetrieveAPIView → for getting one object
+
+UpdateAPIView → for updating objects
+
+DestroyAPIView → for deleting objects
+
+RetrieveUpdateAPIView → for get + update
+
+ListCreateAPIView → for list + create
+These are called generic views because they handle generic, common operations.
