@@ -82,3 +82,70 @@ class  Membership(models.Model):
 
     def __str__(self):
         return f"{self.user} → {self.workspace} ({self.role})"
+
+
+class WorkspaceInvites(models.Model):
+    ROLE_EDITOR='EDITOR'
+    ROLE_VIEWER='VIEWER'
+    ROLE_CHOICES=[
+        (ROLE_EDITOR,'Editor'),
+        (ROLE_VIEWER,'Viewer')
+    ]
+    id=models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
+    workspace=models.ForeignKey(
+        Workspaces,
+        on_delete=models.CASCADE,
+        related_name='invites'
+    )
+
+    email =models.EmailField()
+    role = models.CharField(max_length=10,choices = ROLE_CHOICES)
+    invited_by=models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='sent_invites'
+    )
+    is_accepted =models.BooleanField(default=False)
+    created_at=models.DateTimeField(auto_now_add=True)
+
+    class  Meta:
+        unique_together=('workspace','email')
+
+    def __str__(self):
+        return f"{self.email}->{self.workspace}"
+
+class ActivityLog(models.Model):
+    ACTION_WORKSPACE_CREATED = "WORKSPACE_CREATED"
+    ACTION_WORKSPACE_UPDATED = "WORKSPACE_UPDATED"
+    ACTION_WORKSPACE_DELETED = "WORKSPACE_DELETED"
+    ACTION_INVITE_SENT = "INVITE_SENT"
+    ACTION_INVITE_ACCEPTED = "INVITE_ACCEPTED"
+    ACTION_MEMBER_JOINED = "MEMBER_JOINED"
+
+    ACTION_CHOICES = [
+        (ACTION_WORKSPACE_CREATED, "Workspace Created"),
+        (ACTION_WORKSPACE_UPDATED, "Workspace Updated"),
+        (ACTION_WORKSPACE_DELETED, "Workspace Deleted"),
+        (ACTION_INVITE_SENT, "Invite Sent"),
+        (ACTION_INVITE_ACCEPTED, "Invite Accepted"),
+        (ACTION_MEMBER_JOINED, "Member Joined"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    workspace = models.ForeignKey(
+        Workspaces,
+        on_delete=models.CASCADE,
+        related_name="activities"
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    action = models.CharField(max_length=50, choices=ACTION_CHOICES)
+    metadata = models.JSONField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.action} - {self.workspace}"

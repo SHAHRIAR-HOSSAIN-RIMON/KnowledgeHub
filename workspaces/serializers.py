@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models  import Workspaces, Membership
+from .models  import Workspaces, Membership,WorkspaceInvites,ActivityLog
 from django.contrib.auth import get_user_model
 
 User =get_user_model()
@@ -56,4 +56,58 @@ class WorkspaceCreateSerializer(serializers.ModelSerializer):
             workspace=workspace,
             role=Membership.ROLE_OWNER
         )
+        
+        # Log workspace creation
+        ActivityLog.objects.create(
+            workspace=workspace,
+            user=user,
+            action=ActivityLog.ACTION_WORKSPACE_CREATED,
+        )
+        
         return workspace
+
+class WorkspaceInviteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=WorkspaceInvites
+        fields=['id','email','role','created_at']
+        read_only_fields=['id','created_at']
+#self → the serializer instance (so you can access context, request, etc.).
+
+    def validate(self,attrs):
+#attrs → the dictionary of cleaned data from the request that you’re checking before saving.
+          # Get workspace from the view's kwargs through context
+          request = self.context['request']
+          workspace_id = self.context['view'].kwargs['workspace_id']
+          workspace = Workspaces.objects.get(id=workspace_id)
+          email =attrs['email']
+#attrs is a dictionary of the data being validated.
+#validate (serializer method)
+#Purpose: enforce business rules before saving.
+          if Membership.objects.filter(
+            workspace =workspace,
+            user__email=email
+          ).exists():
+            raise serializers.ValidationError("Your are already a member")
+          return attrs
+#Think: “Is this data allowed? Should I reject it before it touches the database?”
+
+#Example:
+
+#Prevent inviting someone who is already a member.
+
+#Prevent inviting yourself.
+
+#Prevent duplicate invites
+# (extra check beyond unique_together).
+class ActivityLogSerializer(serializers.ModelSerializer):
+    user_email = serializers.EmailField(source="user.email", read_only=True)
+
+    class Meta:
+        model = ActivityLog
+        fields = [
+            "id",
+            "action",
+            "user_email",
+            "metadata",
+            "created_at",
+        ]
