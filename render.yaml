@@ -3,7 +3,7 @@ services:
     name: knowledgehub-backend
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn knowledgehub.wsgi:application"
+    startCommand: "gunicorn knowledgehub.wsgi:application --bind 0.0.0.0:$PORT"
     plan: free
     envVars:
       - key: SECRET_KEY
