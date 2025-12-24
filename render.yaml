@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: knowledgehub-backend
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn knowledgehub.wsgi:application"
+    plan: free
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: knowledgehub-db
+          property: connectionString
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: SITE_URL
+        value: "https://knowledgehub-backend.onrender.com"
+      - key: SITE_NAME
+        value: "KnowledgeHub"
+      - key: ALLOWED_HOSTS
+        value: "knowledgehub-backend.onrender.com"
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://knowledgehub-frontend.netlify.app"
+
+databases:
+  - name: knowledgehub-db
+    databaseName: knowledgehub
+    user: knowledgehub_user
+    plan: free
