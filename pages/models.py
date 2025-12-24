@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.indexes import GinIndex
 # Create your models here.
 import uuid
 from django.conf import settings
@@ -44,6 +45,12 @@ class Page(models.Model):
     is_deleted=models.BooleanField(default=False)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
+    search_vector = SearchVectorField(null=True)
+
+    class Meta:
+        indexes = [
+            GinIndex(fields=["search_vector"])
+        ]
 
     def __str__(self):
         return  self.title
@@ -76,3 +83,9 @@ class PageVersion(models.Model):
 #You want the version record to stay even if the user account is deleted.
 #  If you used CASCADE, deleting the user would also delete the version — which defeats the purpose of keeping history.
 #  SET_NULL clears the user reference instead, and null=True makes that allowed.
+
+
+
+#Pages are text documents. I want them searchable by title and content.”
+
+#Reasoning: Postgres full‑text search needs a vector field. The GinIndex makes queries fast and scalable.

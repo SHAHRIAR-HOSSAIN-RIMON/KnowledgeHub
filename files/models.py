@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.postgres.search import SearchVectorField
 # Create your models here.
 from django.conf import settings  
 import uuid
@@ -27,6 +27,8 @@ class  FileAsset(models.Model):
     is_deleted=models.BooleanField(default=False)
     uploaded_at =models.DateTimeField(auto_now_add=True)
     deleted_at=models.DateTimeField(null=True, blank=True)
+
+    search_vector = SearchVectorField(null=True)
 
     def __str__(self):
         return self.filename

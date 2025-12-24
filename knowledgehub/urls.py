@@ -24,6 +24,11 @@ urlpatterns = [
     path("api/pages/", include("pages.urls")),
 
     path("api/files/", include("files.urls")),
+    # knowledgehub/urls.py
+     path("api/ai/", include("ai.urls")),
+     path("api/search/", include("search.urls")),
+
+ 
 
 
 

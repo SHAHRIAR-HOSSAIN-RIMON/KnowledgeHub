@@ -9,6 +9,14 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+
+
+
+
 
 from pathlib import Path
 
@@ -47,7 +55,7 @@ INSTALLED_APPS = [
     "pages",
     "files",
     "search",
-    "ai_tasks",
+    "ai",
     "usage",
 ]
 
@@ -159,3 +167,7 @@ SIMPLE_JWT = {
 }
 MEDIA_URL="/media/"
 MEDIA_ROOT =BASE_DIR / "media"
+
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+SITE_URL = os.getenv("SITE_URL", "http://localhost:8000")
+SITE_NAME = os.getenv("SITE_NAME", "KnowledgeHub")
