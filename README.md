@@ -53,7 +53,7 @@ When deploying to Render, go to your web service → **Environment** tab and add
 | `DEBUG`                | `False`                                                                                |
 | `ALLOWED_HOSTS`        | `knowledgehub-backend-zd2x.onrender.com`                                               |
 | `DATABASE_URL`         | `postgresql://user:pass@host:port/dbname` _(copy from PostgreSQL database)_            |
-| `OPENROUTER_API_KEY`   | `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`            |
+| `OPENROUTER_API_KEY`   | `your-openrouter-key-here`            |
 | `SITE_URL`             | `https://knowledgehub-backend-zd2x.onrender.com`                                       |
 | `SITE_NAME`            | `KnowledgeHub`                                                                         |
 | `CORS_ALLOWED_ORIGINS` | `https://localhost:3000`                                                               |
