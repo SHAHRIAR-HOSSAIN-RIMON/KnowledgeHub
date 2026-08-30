@@ -86,7 +86,7 @@ When deploying to Render, go to your web service → **Environment** tab and add
 5. **OPENROUTER_API_KEY**
 
    - **Key:** `OPENROUTER_API_KEY`
-   - **Value:** `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`
+   - **Value:** your-openrouter-key-here`
 
 6. **SITE_URL**
 
